@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ebubekirgungor.shop.repository.CategoryRepository;
 import com.ebubekirgungor.shop.repository.ProductRepository;
-import com.ebubekirgungor.shop.dto.ProductDTO;
 import com.ebubekirgungor.shop.exception.ResourceNotFoundException;
 import com.ebubekirgungor.shop.model.Category;
 import com.ebubekirgungor.shop.model.Product;
+import com.ebubekirgungor.shop.model.Product.ProductDTO;
 
 import java.util.HashMap;
 import java.util.List;

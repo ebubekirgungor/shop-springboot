@@ -15,12 +15,29 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+class ProductImage {
+    private String name;
+    private byte order;
+}
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+class ProductFilter {
+    private String name;
+    private String value;
+}
+
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "products")
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -54,5 +71,19 @@ public class Product {
     @JsonProperty("category")
     public String getCategoryTitle() {
         return category != null ? category.getTitle() : null;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Table(name = "products")
+    public static class ProductDTO {
+        private String title;
+        private String url;
+        private double list_price;
+        private short stock_quantity;
+        private List<ProductImage> images;
+        private List<ProductFilter> filters;
+        private long category_id;
     }
 }

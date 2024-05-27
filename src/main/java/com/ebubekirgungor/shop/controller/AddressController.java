@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ebubekirgungor.shop.repository.AddressRepository;
 import com.ebubekirgungor.shop.repository.UserRepository;
-import com.ebubekirgungor.shop.dto.AddressDTO;
 import com.ebubekirgungor.shop.exception.ResourceNotFoundException;
 import com.ebubekirgungor.shop.model.Address;
+import com.ebubekirgungor.shop.model.Address.AddressDTO;
 import com.ebubekirgungor.shop.model.User;
 
 import java.util.HashMap;
@@ -45,7 +45,7 @@ public class AddressController {
         address.setAddress(addressDTO.getAddress());
 
         User user = userRepository.findById(addressDTO.getUser_id())
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
         address.setUser(user);
 
         return addressRepository.save(address);
