@@ -13,11 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ebubekirgungor.shop.repository.CategoryRepository;
 import com.ebubekirgungor.shop.repository.ProductRepository;
+import com.ebubekirgungor.shop.repository.UserRepository;
 import com.ebubekirgungor.shop.exception.ResourceNotFoundException;
 import com.ebubekirgungor.shop.model.Category;
 import com.ebubekirgungor.shop.model.Product;
+import com.ebubekirgungor.shop.model.User;
 import com.ebubekirgungor.shop.model.Product.ProductDTO;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +34,9 @@ public class ProductController {
 
 	@Autowired
 	private CategoryRepository categoryRepository;
+
+	@Autowired
+	private UserRepository userRepository;
 
 	@GetMapping
 	public List<Product> getAllProducts() {
@@ -70,5 +76,21 @@ public class ProductController {
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("deleted", Boolean.TRUE);
 		return ResponseEntity.ok(response);
+	}
+
+	@PostMapping("/add_to_favorites/{product_id}/{user_id}")
+	public Product addProductToFavorites(@PathVariable(name = "product_id") Long product_id,
+			@PathVariable(name = "user_id") Long user_id) {
+
+		User user = userRepository.findById(user_id).orElseThrow(() -> new RuntimeException("User not found"));
+
+		Product product = productRepository.findById(product_id)
+				.orElseThrow(() -> new RuntimeException("Product not found"));
+
+		List<User> users = new ArrayList<User>();
+		users.add(user);
+		product.setUsers(users);
+
+		return productRepository.save(product);
 	}
 }

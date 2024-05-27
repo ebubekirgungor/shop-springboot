@@ -53,13 +53,18 @@ public class User {
     @Column(name = "role")
     private byte role;
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "cart", columnDefinition = "jsonb")
-    private Cart[] cart;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Address> addresses;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Order> orders;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "cart", columnDefinition = "jsonb")
+    private Cart[] cart;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH,
+            CascadeType.REFRESH })
+    @JoinTable(name = "user_products", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
+    private List<Product> favorites;
 }
