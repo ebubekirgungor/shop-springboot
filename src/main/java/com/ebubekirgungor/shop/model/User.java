@@ -1,5 +1,7 @@
 package com.ebubekirgungor.shop.model;
 
+import java.util.List;
+
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -54,4 +56,7 @@ public class User {
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "cart", columnDefinition = "jsonb")
     private Cart[] cart;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Address> addresses;
 }
