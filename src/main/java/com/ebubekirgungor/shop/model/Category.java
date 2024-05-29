@@ -20,17 +20,17 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "title")
+    @Column(name = "title", unique = true, nullable = false)
     private String title;
 
-    @Column(name = "url")
+    @Column(name = "url", unique = true, nullable = false)
     private String url;
 
     @Column(name = "image")
     private String image;
 
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "filters", columnDefinition = "jsonb")
+    @Column(name = "filters", columnDefinition = "jsonb", nullable = false)
     private String[] filters;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

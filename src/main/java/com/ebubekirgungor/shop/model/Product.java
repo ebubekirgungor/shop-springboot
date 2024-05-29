@@ -42,24 +42,24 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "title")
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "url")
+    @Column(name = "url", nullable = false)
     private String url;
 
-    @Column(name = "list_price")
+    @Column(name = "list_price", nullable = false)
     private double list_price;
 
-    @Column(name = "stock_quantity")
+    @Column(name = "stock_quantity", nullable = false)
     private short stock_quantity;
 
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "images", columnDefinition = "jsonb")
+    @Column(name = "images", columnDefinition = "jsonb", nullable = false)
     private List<ProductImage> images;
 
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "filters", columnDefinition = "jsonb")
+    @Column(name = "filters", columnDefinition = "jsonb", nullable = false)
     private List<ProductFilter> filters;
 
     @JsonIgnore
@@ -76,7 +76,6 @@ public class Product {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @Table(name = "products")
     public static class ProductDTO {
         private String title;
         private String url;

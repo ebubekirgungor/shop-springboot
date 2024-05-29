@@ -20,13 +20,13 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "title")
+    @Column(name = "title", unique = true, nullable = false)
     private String title;
 
-    @Column(name = "customer_name")
+    @Column(name = "customer_name", nullable = false)
     private String customer_name;
 
-    @Column(name = "address")
+    @Column(name = "address", nullable = false)
     private String address;
 
     @JsonIgnore
@@ -38,7 +38,6 @@ public class Address {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @Table(name = "products")
     public static class AddressDTO {
         private String title;
         private String customer_name;

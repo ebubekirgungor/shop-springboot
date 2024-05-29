@@ -71,7 +71,7 @@ public class User implements UserDetails {
     private List<Order> orders;
 
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "cart", columnDefinition = "jsonb")
+    @Column(name = "cart", columnDefinition = "jsonb", nullable = false)
     private Cart[] cart;
 
     @JsonIgnore

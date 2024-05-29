@@ -52,20 +52,20 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "total_amount")
+    @Column(name = "total_amount", nullable = false)
     private double total_amount;
 
-    @Column(name = "customer_name")
+    @Column(name = "customer_name", nullable = false)
     private String customer_name;
 
-    @Column(name = "delivery_address")
+    @Column(name = "delivery_address", nullable = false)
     private String delivery_address;
 
-    @Column(name = "delivery_status")
+    @Column(name = "delivery_status", nullable = false)
     private byte delivery_status;
 
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "products", columnDefinition = "jsonb")
+    @Column(name = "products", columnDefinition = "jsonb", nullable = false)
     private List<OrderProduct> products;
 
     @JsonIgnore
@@ -77,7 +77,6 @@ public class Order {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @Table(name = "orders")
     public static class OrderDTO {
         private double total_amount;
         private String customer_name;
