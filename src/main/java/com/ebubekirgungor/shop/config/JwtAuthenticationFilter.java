@@ -12,6 +12,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import com.ebubekirgungor.shop.service.JwtService;
+import com.ebubekirgungor.shop.util.CookieUtils;
 
 import java.io.IOException;
 
@@ -40,15 +41,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws ServletException, IOException {
-        final String authHeader = request.getHeader("Authorization");
+        final String jwt = CookieUtils.readCookie(request, "JWT_TOKEN");
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        if (jwt == "") {
             filterChain.doFilter(request, response);
             return;
         }
 
         try {
-            final String jwt = authHeader.substring(7);
             final String userEmail = jwtService.extractUsername(jwt);
 
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

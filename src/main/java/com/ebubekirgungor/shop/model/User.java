@@ -27,6 +27,21 @@ import lombok.NoArgsConstructor;
 @Table(name = "users")
 public class User implements UserDetails {
 
+    public static enum Role {
+        Customer((byte) 0),
+        Admin((byte) 1);
+
+        private final byte value;
+
+        Role(final byte value) {
+            this.value = value;
+        }
+
+        public byte getValue() {
+            return value;
+        }
+    }
+
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
@@ -61,6 +76,10 @@ public class User implements UserDetails {
     @Column(name = "gender", nullable = false)
     private boolean gender;
 
+    public boolean getGender() {
+        return this.gender;
+    }
+
     @Column(name = "role", nullable = false)
     private byte role;
 
@@ -88,7 +107,7 @@ public class User implements UserDetails {
             ids.add(product.getId());
         }
 
-        return favorites != null ? ids : null;
+        return favorites != null ? ids : new ArrayList<Long>();
     }
 
     @CreationTimestamp
@@ -144,7 +163,7 @@ public class User implements UserDetails {
         private String phone;
         private String birth_date;
         private String gender;
-        private byte role;
+        private Role role;
     }
 
     @Data
