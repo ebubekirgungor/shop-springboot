@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ebubekirgungor.shop.model.User;
 import com.ebubekirgungor.shop.model.User.LoginUserDto;
 import com.ebubekirgungor.shop.model.User.RegisterUserDto;
-import com.ebubekirgungor.shop.response.LoginResponse;
 import com.ebubekirgungor.shop.service.AuthenticationService;
 import com.ebubekirgungor.shop.service.JwtService;
 import com.ebubekirgungor.shop.util.CookieUtils;
@@ -38,23 +37,22 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDto loginUserDto,
+    public ResponseEntity<String> authenticate(@RequestBody LoginUserDto loginUserDto,
             HttpServletResponse response) {
         User authenticatedUser = authenticationService.authenticate(loginUserDto);
 
         String jwtToken = jwtService.generateToken(authenticatedUser);
 
-        LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setToken(jwtToken);
-        loginResponse.setExpiresIn(jwtService.getExpirationTime());
+        CookieUtils.addCookie(response, "JWT_TOKEN", jwtToken,
+                loginUserDto.getRemember_me() ? 30 * 24 * 60 * 60 : 60 * 60);
 
-        CookieUtils.addCookie(response, "JWT_TOKEN", jwtToken, 24 * 60 * 60);
-        return ResponseEntity.ok(loginResponse);
+        return ResponseEntity.ok("ok");
     }
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletResponse response) {
         CookieUtils.deleteCookie(response, "JWT_TOKEN");
+
         return ResponseEntity.ok("ok");
     }
 }

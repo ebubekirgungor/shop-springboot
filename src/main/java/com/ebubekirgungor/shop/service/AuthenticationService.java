@@ -35,7 +35,7 @@ public class AuthenticationService {
         user.setLast_name(input.getLast_name());
         user.setPhone(input.getPhone());
         user.setBirth_date(input.getBirth_date());
-        user.setGender(Boolean.valueOf(input.getGender()));
+        user.setGender(input.getGender());
         user.setRole(input.getRole().getValue());
 
         return userRepository.save(user);

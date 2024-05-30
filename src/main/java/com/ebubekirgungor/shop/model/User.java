@@ -74,11 +74,7 @@ public class User implements UserDetails {
     private String birth_date;
 
     @Column(name = "gender", nullable = false)
-    private boolean gender;
-
-    public boolean getGender() {
-        return this.gender;
-    }
+    private Boolean gender;
 
     @Column(name = "role", nullable = false)
     private byte role;
@@ -162,7 +158,7 @@ public class User implements UserDetails {
         private String last_name;
         private String phone;
         private String birth_date;
-        private String gender;
+        private Boolean gender;
         private Role role;
     }
 
@@ -172,5 +168,6 @@ public class User implements UserDetails {
     public static class LoginUserDto {
         private String email;
         private String password;
+        private Boolean remember_me;
     }
 }
