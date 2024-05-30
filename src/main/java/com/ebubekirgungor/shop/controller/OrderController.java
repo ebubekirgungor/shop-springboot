@@ -22,9 +22,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "${origin-url}")
 @RestController
-@RequestMapping("/api/v1/orders")
+@RequestMapping("${api-base}/orders")
 public class OrderController {
     @Autowired
     private OrderRepository orderRepository;

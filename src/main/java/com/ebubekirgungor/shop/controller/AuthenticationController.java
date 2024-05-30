@@ -1,6 +1,7 @@
 package com.ebubekirgungor.shop.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +17,8 @@ import com.ebubekirgungor.shop.util.CookieUtils;
 
 import jakarta.servlet.http.HttpServletResponse;
 
-@RequestMapping("/api/v1/auth")
+@CrossOrigin(origins = "${origin-url}")
+@RequestMapping("${api-base}/auth")
 @RestController
 public class AuthenticationController {
     private final JwtService jwtService;

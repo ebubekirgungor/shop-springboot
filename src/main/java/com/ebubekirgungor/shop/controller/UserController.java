@@ -15,9 +15,9 @@ import com.ebubekirgungor.shop.response.UserResponse;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "${origin-url}")
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("${api-base}/users")
 public class UserController {
     @Autowired
     private UserRepository userRepository;

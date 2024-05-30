@@ -19,9 +19,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "${origin-url}")
 @RestController
-@RequestMapping("/api/v1/categories")
+@RequestMapping("${api-base}/categories")
 public class CategoryController {
     @Autowired
     private CategoryRepository categoryRepository;
