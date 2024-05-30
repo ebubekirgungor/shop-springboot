@@ -23,4 +23,12 @@ public class CookieUtils {
                 .map(Cookie::getValue)
                 .findAny().orElse("") : "";
     }
+
+    public static void deleteCookie(HttpServletResponse response, String name) {
+        Cookie cookie = new Cookie(name, "");
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+    }
 }

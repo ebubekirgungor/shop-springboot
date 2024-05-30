@@ -51,4 +51,10 @@ public class AuthenticationController {
         CookieUtils.addCookie(response, "JWT_TOKEN", jwtToken, 24 * 60 * 60);
         return ResponseEntity.ok(loginResponse);
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletResponse response) {
+        CookieUtils.deleteCookie(response, "JWT_TOKEN");
+        return ResponseEntity.ok("ok");
+    }
 }
