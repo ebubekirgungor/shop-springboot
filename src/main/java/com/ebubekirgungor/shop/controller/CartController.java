@@ -1,9 +1,7 @@
 package com.ebubekirgungor.shop.controller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ebubekirgungor.shop.model.Product;
 import com.ebubekirgungor.shop.model.User;
 import com.ebubekirgungor.shop.model.User.Cart;
+import com.ebubekirgungor.shop.model.User.CartDTO;
 import com.ebubekirgungor.shop.repository.ProductRepository;
 import com.ebubekirgungor.shop.repository.UserRepository;
 import com.ebubekirgungor.shop.response.CartResponse;
@@ -35,12 +35,12 @@ public class CartController {
     @Autowired
     private UserRepository userRepository;
 
-    private final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
     @GetMapping
     public ResponseEntity<List<CartResponse>> getCart() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
-        final Cart[] cart = currentUser.getCart();
+
+        final List<Cart> cart = currentUser.getCart();
 
         List<Long> ids = new ArrayList<>();
 
@@ -48,21 +48,27 @@ public class CartController {
             ids.add(item.getId());
         }
 
-        List<CartResponse> products = productRepository.findAllById(ids).stream().map(e -> (CartResponse) e)
-                .collect(Collectors.toList());
+        List<Product> products = productRepository.findAllById(ids);
+        List<CartResponse> cartResponse = new ArrayList<>();
 
-        for (int i = 0; i < products.size(); i++) {
-            products.get(i).setCart_quantity(cart[i].getQuantity());
-            products.get(i).setSelected(cart[i].getSelected());
+        int index = 0;
+        for (Product product : products) {
+            cartResponse.add(
+                    new CartResponse(product.getId(), product.getTitle(), product.getUrl(), product.getList_price(),
+                            product.getStock_quantity(), product.getImages(), cart.get(index).getQuantity(),
+                            cart.get(index).getSelected()));
+            index++;
         }
 
-        return ResponseEntity.ok(products);
+        return ResponseEntity.ok(cartResponse);
     }
 
     @PatchMapping
-    public ResponseEntity<String> updateCart(@RequestBody User user) {
+    public ResponseEntity<String> updateCart(@RequestBody CartDTO cartDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
-        currentUser.setCart(user.getCart());
+
+        currentUser.setCart(cartDTO.getCart());
 
         userRepository.save(currentUser);
 
@@ -71,20 +77,22 @@ public class CartController {
 
     @PostMapping("/{id}")
     public ResponseEntity<String> addProductToCart(@PathVariable Long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
-        Cart[] cart = currentUser.getCart();
 
-        for (int i = 0; i < cart.length; i++) {
-            if (cart[i].getId() == id) {
-                cart[i].setQuantity((byte) (cart[i].getQuantity() + 1));
+        List<Cart> cart = currentUser.getCart();
+
+        for (Cart item : cart) {
+            if (item.getId() == id) {
+                item.setQuantity((byte) (item.getQuantity() + 1));
                 userRepository.save(currentUser);
                 return ResponseEntity.ok("ok");
             }
         }
 
-        Cart newCart = currentUser.new Cart(id, (byte) 1, true);
-        cart = Arrays.copyOf(cart, cart.length + 1);
-        cart[cart.length - 1] = newCart;
+        cart.add(new Cart(id, (byte) 1, true));
+
+        currentUser.setCart(cart);
 
         userRepository.save(currentUser);
 

@@ -45,10 +45,17 @@ public class User implements UserDetails {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public class Cart {
+    public static class Cart {
         private long id;
         private byte quantity;
         private Boolean selected;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class CartDTO {
+        private List<Cart> cart;
     }
 
     @Id
@@ -87,7 +94,7 @@ public class User implements UserDetails {
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "cart", columnDefinition = "jsonb", nullable = false)
-    private Cart[] cart;
+    private List<Cart> cart;
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH,

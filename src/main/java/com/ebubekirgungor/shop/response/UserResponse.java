@@ -1,5 +1,7 @@
 package com.ebubekirgungor.shop.response;
 
+import java.util.List;
+
 import com.ebubekirgungor.shop.model.User.Cart;
 
 import lombok.AllArgsConstructor;
@@ -16,5 +18,5 @@ public class UserResponse {
     private String phone;
     private String birth_date;
     private Boolean gender;
-    private Cart[] cart;
+    private List<Cart> cart;
 }
