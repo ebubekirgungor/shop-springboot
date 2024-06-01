@@ -48,7 +48,7 @@ public class User implements UserDetails {
     public class Cart {
         private long id;
         private byte quantity;
-        private boolean selected;
+        private Boolean selected;
     }
 
     @Id
