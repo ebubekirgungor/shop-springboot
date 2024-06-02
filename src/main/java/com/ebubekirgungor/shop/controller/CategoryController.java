@@ -12,9 +12,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ebubekirgungor.shop.repository.CategoryRepository;
+import com.ebubekirgungor.shop.request.CategoryRequest;
+import com.ebubekirgungor.shop.response.CategoryResponse;
 import com.ebubekirgungor.shop.exception.ResourceNotFoundException;
 import com.ebubekirgungor.shop.model.Category;
+import com.ebubekirgungor.shop.model.Product;
+import com.ebubekirgungor.shop.model.Product.ProductFilter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,11 +41,37 @@ public class CategoryController {
         return categoryRepository.save(category);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Category> getCategoryById(@PathVariable Long id) {
-        Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Category not exist with id :" + id));
-        return ResponseEntity.ok(category);
+    @GetMapping("/{url}")
+    public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable String url,
+            @RequestBody CategoryRequest categoryRequest) {
+        Category category = categoryRepository.findByUrl(url)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not exist with url :" + url));
+
+        Map<String, List<String>> categoryFilters = categoryRequest.getFilters();
+
+        List<Product> allProducts = new ArrayList<>();
+
+        for (Product product : category.getProducts()) {
+            boolean add = false;
+
+            for (ProductFilter filter : product.getFilters()) {
+                if (categoryFilters.get(filter.getName()).contains(filter.getValue())) {
+                    add = true;
+                }
+            }
+
+            if (add) {
+                allProducts.add(product);
+            }
+        }
+
+        CategoryResponse categoryResponse = new CategoryResponse();
+
+        categoryResponse.setTitle(category.getTitle());
+        categoryResponse.setFilters(category.getFilters());
+        categoryResponse.setProducts(allProducts);
+
+        return ResponseEntity.ok(categoryResponse);
     }
 
     @DeleteMapping("/{id}")
