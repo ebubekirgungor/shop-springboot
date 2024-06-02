@@ -34,14 +34,4 @@ public class Address {
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class AddressDTO {
-        private String title;
-        private String customer_name;
-        private String address;
-        private long user_id;
-    }
 }

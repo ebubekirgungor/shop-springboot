@@ -36,7 +36,7 @@ public class CartController {
     private UserRepository userRepository;
 
     @GetMapping
-    public ResponseEntity<List<CartResponse>> getCart() {
+    public List<CartResponse> getCart() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
 
@@ -60,7 +60,7 @@ public class CartController {
             index++;
         }
 
-        return ResponseEntity.ok(cartResponse);
+        return cartResponse;
     }
 
     @PatchMapping
