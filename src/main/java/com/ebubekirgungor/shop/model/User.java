@@ -1,6 +1,5 @@
 package com.ebubekirgungor.shop.model;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -13,7 +12,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -101,17 +99,6 @@ public class User implements UserDetails {
             CascadeType.REFRESH })
     @JoinTable(name = "user_products", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
     private List<Product> favorites;
-
-    @JsonProperty("favorites_ids")
-    public List<Long> getFavoritesIds() {
-        List<Long> ids = new ArrayList<>();
-
-        for (Product product : favorites) {
-            ids.add(product.getId());
-        }
-
-        return favorites != null ? ids : new ArrayList<Long>();
-    }
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
