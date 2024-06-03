@@ -1,6 +1,8 @@
 package com.ebubekirgungor.shop.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ebubekirgungor.shop.model.User;
 import com.ebubekirgungor.shop.model.User.LoginUserDto;
 import com.ebubekirgungor.shop.model.User.RegisterUserDto;
+import com.ebubekirgungor.shop.model.User.UpdatePasswordDto;
 import com.ebubekirgungor.shop.service.AuthenticationService;
 import com.ebubekirgungor.shop.service.JwtService;
 import com.ebubekirgungor.shop.util.CookieUtils;
@@ -54,5 +57,12 @@ public class AuthenticationController {
         CookieUtils.deleteCookie(response, "jwt");
 
         return ResponseEntity.ok("ok");
+    }
+
+    @PostMapping("/update_password")
+    public ResponseEntity<String> updatePassword(@RequestBody UpdatePasswordDto updatePasswordDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        return authenticationService.updatePassword((User) authentication.getPrincipal(), updatePasswordDto);
     }
 }

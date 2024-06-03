@@ -164,4 +164,12 @@ public class User implements UserDetails {
         private String password;
         private Boolean remember_me;
     }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class UpdatePasswordDto {
+        private String old_password;
+        private String new_password;
+    }
 }
