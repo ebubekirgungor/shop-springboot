@@ -38,9 +38,8 @@ public class CartController {
     @GetMapping
     public List<CartResponse> getCart() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = (User) authentication.getPrincipal();
 
-        final List<Cart> cart = currentUser.getCart();
+        final List<Cart> cart = ((User) authentication.getPrincipal()).getCart();
 
         List<Long> ids = new ArrayList<>();
 

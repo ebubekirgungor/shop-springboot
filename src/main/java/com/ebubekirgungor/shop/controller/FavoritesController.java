@@ -33,19 +33,18 @@ public class FavoritesController {
     @GetMapping
     public List<Product> getAllFavorites() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = (User) authentication.getPrincipal();
 
-        return productRepository.findProductsByUsersId(currentUser.getId());
+        return productRepository.findProductsByUsersId(((User) authentication.getPrincipal()).getId());
     }
 
     @GetMapping("/ids")
     public List<Long> getFavoritesIds() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = (User) authentication.getPrincipal();
 
         List<Long> ids = new ArrayList<Long>();
 
-        for (Product product : productRepository.findProductsByUsersId(currentUser.getId())) {
+        for (Product product : productRepository
+                .findProductsByUsersId(((User) authentication.getPrincipal()).getId())) {
             ids.add(product.getId());
         }
 

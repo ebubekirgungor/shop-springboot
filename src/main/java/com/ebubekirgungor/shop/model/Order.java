@@ -14,22 +14,23 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-class OrderProduct {
-    private String url;
-    private String image;
-    private byte quantity;
-    private double list_price;
-}
-
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "orders")
 public class Order {
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class OrderProduct {
+        private String url;
+        private String title;
+        private double list_price;
+        private String image;
+        private byte quantity;
+    }
 
     public static enum DeliveryStatus {
         Delivered((byte) 0),
@@ -78,11 +79,7 @@ public class Order {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class OrderDTO {
-        private double total_amount;
         private String customer_name;
         private String delivery_address;
-        private DeliveryStatus delivery_status;
-        private List<OrderProduct> products;
-        private long user_id;
     }
 }

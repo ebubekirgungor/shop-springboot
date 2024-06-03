@@ -33,17 +33,15 @@ public class AddressController {
     @GetMapping
     public List<Address> getAllAddresses() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = (User) authentication.getPrincipal();
 
-        return addressRepository.findByUserId(currentUser.getId());
+        return addressRepository.findByUserId(((User) authentication.getPrincipal()).getId());
     }
 
     @PostMapping
     public Address createAddress(@RequestBody Address address) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = (User) authentication.getPrincipal();
 
-        address.setUser(currentUser);
+        address.setUser((User) authentication.getPrincipal());
 
         return addressRepository.save(address);
     }
