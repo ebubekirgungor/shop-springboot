@@ -1,5 +1,6 @@
 package com.ebubekirgungor.shop.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.hibernate.annotations.JdbcTypeCode;
@@ -17,7 +18,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "categories")
-public class Category {
+public class Category implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

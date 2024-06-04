@@ -1,6 +1,8 @@
 package com.ebubekirgungor.shop.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,11 +33,13 @@ public class CategoryController {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Cacheable(value = "categoriesCache")
     @GetMapping
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
 
+    @CacheEvict(value = "categoriesCache", allEntries = true)
     @PostMapping
     public Category createCategory(@RequestBody Category category) {
         return categoryRepository.save(category);
