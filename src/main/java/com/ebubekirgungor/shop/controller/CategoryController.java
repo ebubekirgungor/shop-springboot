@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ebubekirgungor.shop.repository.CategoryRepository;
 import com.ebubekirgungor.shop.request.CategoryRequest;
 import com.ebubekirgungor.shop.response.CategoryResponse;
+
 import com.ebubekirgungor.shop.exception.ResourceNotFoundException;
 import com.ebubekirgungor.shop.model.Category;
 import com.ebubekirgungor.shop.model.Product;
@@ -46,10 +47,21 @@ public class CategoryController {
     }
 
     @GetMapping("/{url}")
-    public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable String url,
-            @RequestBody CategoryRequest categoryRequest) {
+    public ResponseEntity<CategoryResponse> getCategoryByUrl(@PathVariable String url,
+            @RequestBody(required = false) CategoryRequest categoryRequest) {
+
         Category category = categoryRepository.findByUrl(url)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not exist with url :" + url));
+
+        CategoryResponse categoryResponse = new CategoryResponse();
+
+        categoryResponse.setTitle(category.getTitle());
+        categoryResponse.setFilters(category.getFilters());
+
+        if (categoryRequest == null) {
+            categoryResponse.setProducts(category.getProducts());
+            return ResponseEntity.ok(categoryResponse);
+        }
 
         Map<String, List<String>> categoryFilters = categoryRequest.getFilters();
 
@@ -69,10 +81,6 @@ public class CategoryController {
             }
         }
 
-        CategoryResponse categoryResponse = new CategoryResponse();
-
-        categoryResponse.setTitle(category.getTitle());
-        categoryResponse.setFilters(category.getFilters());
         categoryResponse.setProducts(allProducts);
 
         return ResponseEntity.ok(categoryResponse);
