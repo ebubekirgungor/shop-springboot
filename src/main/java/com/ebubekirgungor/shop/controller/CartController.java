@@ -1,7 +1,9 @@
 package com.ebubekirgungor.shop.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -41,22 +43,21 @@ public class CartController {
 
         final List<Cart> cart = ((User) authentication.getPrincipal()).getCart();
 
-        List<Long> ids = new ArrayList<>();
+        Map<Long, Cart> cartProductMap = new HashMap<>();
 
         for (Cart item : cart) {
-            ids.add(item.getId());
+            cartProductMap.put(item.getId(), item);
         }
 
-        List<Product> products = productRepository.findAllById(ids);
+        List<Product> products = productRepository.findAllById(cartProductMap.keySet());
         List<CartResponse> cartResponse = new ArrayList<>();
 
-        int index = 0;
         for (Product product : products) {
             cartResponse.add(
                     new CartResponse(product.getId(), product.getTitle(), product.getUrl(), product.getList_price(),
-                            product.getStock_quantity(), product.getImages(), cart.get(index).getQuantity(),
-                            cart.get(index).getSelected()));
-            index++;
+                            product.getStock_quantity(), product.getImages(),
+                            cartProductMap.get(product.getId()).getQuantity(),
+                            cartProductMap.get(product.getId()).getSelected()));
         }
 
         return cartResponse;

@@ -1,6 +1,7 @@
 package com.ebubekirgungor.shop.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,12 +17,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ebubekirgungor.shop.repository.OrderRepository;
 import com.ebubekirgungor.shop.repository.ProductRepository;
 import com.ebubekirgungor.shop.repository.UserRepository;
+import com.github.sonus21.rqueue.core.RqueueMessageEnqueuer;
+
 import com.ebubekirgungor.shop.exception.ResourceNotFoundException;
 import com.ebubekirgungor.shop.model.Order;
 import com.ebubekirgungor.shop.model.Order.DeliveryStatus;
 import com.ebubekirgungor.shop.model.Order.OrderDTO;
 import com.ebubekirgungor.shop.model.Order.OrderProduct;
 import com.ebubekirgungor.shop.model.User.Cart;
+import com.ebubekirgungor.shop.queue.MessageListener.OrderQueue;
 import com.ebubekirgungor.shop.model.Product;
 import com.ebubekirgungor.shop.model.User;
 
@@ -42,6 +46,12 @@ public class OrderController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RqueueMessageEnqueuer rqueueMessageEnqueuer;
+
+    @Value("${order.queue.name}")
+    private String orderQueueName;
 
     @GetMapping
     public List<Order> getAllOrders() {
@@ -92,9 +102,10 @@ public class OrderController {
         order.setTotal_amount(total_amount);
         order.setDelivery_status(DeliveryStatus.InProgress.getValue());
         order.setProducts(orderProducts);
-        order.setUser(currentUser);
 
-        orderRepository.save(order);
+        OrderQueue orderQueue = new OrderQueue(order, currentUser.getId());
+
+        rqueueMessageEnqueuer.enqueue(orderQueueName, orderQueue);
 
         List<Cart> newCart = new ArrayList<>();
 
