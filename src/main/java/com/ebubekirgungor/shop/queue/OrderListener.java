@@ -15,7 +15,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Component
-public class MessageListener {
+public class OrderListener {
 
     @Data
     @AllArgsConstructor
@@ -32,7 +32,7 @@ public class MessageListener {
     private UserRepository userRepository;
 
     @RqueueListener(value = "${order.queue.name}", numRetries = "3", deadLetterQueue = "failed-job-queue", concurrency = "5-10")
-    public void onMessage(OrderQueue orderQueue) {
+    public void onOrder(OrderQueue orderQueue) {
         Order order = orderQueue.getOrder();
 
         User user = userRepository.findById(orderQueue.getUserId())
