@@ -25,7 +25,7 @@ import com.ebubekirgungor.shop.model.Order.DeliveryStatus;
 import com.ebubekirgungor.shop.model.Order.OrderDTO;
 import com.ebubekirgungor.shop.model.Order.OrderProduct;
 import com.ebubekirgungor.shop.model.User.Cart;
-import com.ebubekirgungor.shop.queue.MessageListener.OrderQueue;
+import com.ebubekirgungor.shop.queue.OrderListener.OrderQueue;
 import com.ebubekirgungor.shop.model.Product;
 import com.ebubekirgungor.shop.model.User;
 
