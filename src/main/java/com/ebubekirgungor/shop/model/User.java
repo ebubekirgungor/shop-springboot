@@ -1,5 +1,6 @@
 package com.ebubekirgungor.shop.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -26,18 +28,8 @@ import lombok.NoArgsConstructor;
 public class User implements UserDetails {
 
     public static enum Role {
-        Customer((byte) 0),
-        Admin((byte) 1);
-
-        private final byte value;
-
-        Role(final byte value) {
-            this.value = value;
-        }
-
-        public byte getValue() {
-            return value;
-        }
+        CUSTOMER,
+        ADMIN
     }
 
     @Data
@@ -82,7 +74,7 @@ public class User implements UserDetails {
     private Boolean gender;
 
     @Column(name = "role", nullable = false)
-    private byte role;
+    private Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Address> addresses;
@@ -110,7 +102,11 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
+
+        list.add(new SimpleGrantedAuthority(role.name()));
+
+        return list;
     }
 
     public String getPassword() {
@@ -153,7 +149,6 @@ public class User implements UserDetails {
         private String phone;
         private String birth_date;
         private Boolean gender;
-        private Role role;
     }
 
     @Data

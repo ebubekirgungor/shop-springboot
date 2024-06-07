@@ -3,6 +3,7 @@ package com.ebubekirgungor.shop.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -33,12 +34,18 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf
                 .disable())
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers(apiBase + "/auth/**")
-                        .permitAll()
+                        .requestMatchers(apiBase + "/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, apiBase + "/users").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET, apiBase + "/categories/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, apiBase + "/categories/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, apiBase + "/categories/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET, apiBase + "/products/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, apiBase + "/products/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, apiBase + "/products/**").hasAuthority("ADMIN")
                         .anyRequest()
                         .authenticated())
                 .sessionManagement(management -> management

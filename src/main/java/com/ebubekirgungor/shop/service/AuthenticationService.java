@@ -1,5 +1,7 @@
 package com.ebubekirgungor.shop.service;
 
+import java.util.ArrayList;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.ebubekirgungor.shop.model.User;
 import com.ebubekirgungor.shop.model.User.LoginUserDto;
 import com.ebubekirgungor.shop.model.User.RegisterUserDto;
+import com.ebubekirgungor.shop.model.User.Role;
 import com.ebubekirgungor.shop.model.User.UpdatePasswordDto;
 import com.ebubekirgungor.shop.repository.UserRepository;
 
@@ -38,7 +41,8 @@ public class AuthenticationService {
         user.setPhone(input.getPhone());
         user.setBirth_date(input.getBirth_date());
         user.setGender(input.getGender());
-        user.setRole(input.getRole().getValue());
+        user.setCart(new ArrayList<>());
+        user.setRole(Role.CUSTOMER);
 
         return userRepository.save(user);
     }
