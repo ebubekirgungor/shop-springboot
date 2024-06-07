@@ -6,6 +6,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.type.SqlTypes;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -81,7 +82,7 @@ public class Product {
         private String url;
         private double list_price;
         private short stock_quantity;
-        private List<ProductImage> images;
+        private MultipartFile[] images;
         private List<ProductFilter> filters;
         private long category_id;
     }

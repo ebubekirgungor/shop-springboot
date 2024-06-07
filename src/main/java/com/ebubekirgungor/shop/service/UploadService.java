@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UploadService {
     public void upload(MultipartFile image, String location) {
         try {
+            Files.createDirectories(Paths.get(location));
             Files.copy(image.getInputStream(), Paths.get(location).resolve(image.getOriginalFilename()));
         } catch (Exception e) {
             throw new RuntimeException("Could not upload the image: " + e.getMessage());
