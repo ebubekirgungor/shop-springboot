@@ -3,10 +3,12 @@ package com.ebubekirgungor.shop.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,9 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ebubekirgungor.shop.repository.CategoryRepository;
 import com.ebubekirgungor.shop.request.CategoryRequest;
 import com.ebubekirgungor.shop.response.CategoryResponse;
-
+import com.ebubekirgungor.shop.service.UploadService;
 import com.ebubekirgungor.shop.exception.ResourceNotFoundException;
 import com.ebubekirgungor.shop.model.Category;
+import com.ebubekirgungor.shop.model.Category.CategoryDTO;
 import com.ebubekirgungor.shop.model.Product;
 import com.ebubekirgungor.shop.model.Product.ProductFilter;
 
@@ -31,8 +34,12 @@ import java.util.Map;
 @RestController
 @RequestMapping("${api-base}/categories")
 public class CategoryController {
+
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private UploadService uploadService;
 
     @Cacheable(value = "categoriesCache")
     @GetMapping
@@ -42,8 +49,23 @@ public class CategoryController {
 
     @CacheEvict(value = "categoriesCache", allEntries = true)
     @PostMapping
-    public Category createCategory(@RequestBody Category category) {
-        return categoryRepository.save(category);
+    public ResponseEntity<String> createCategory(@ModelAttribute CategoryDTO categoryDTO) {
+
+        try {
+            uploadService.upload(categoryDTO.getImage(), "images/categories");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("Could not upload the image");
+        }
+
+        Category category = new Category();
+        category.setTitle(categoryDTO.getTitle());
+        category.setUrl(categoryDTO.getUrl());
+        category.setImage(categoryDTO.getImage().getOriginalFilename());
+        category.setFilters(categoryDTO.getFilters());
+
+        categoryRepository.save(category);
+
+        return ResponseEntity.ok("ok");
     }
 
     @GetMapping("/{url}")

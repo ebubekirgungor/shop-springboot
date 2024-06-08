@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -39,4 +40,14 @@ public class Category implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Product> products;
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class CategoryDTO {
+        private String title;
+        private String url;
+        private MultipartFile image;
+        private String[] filters;
+    }
 }
