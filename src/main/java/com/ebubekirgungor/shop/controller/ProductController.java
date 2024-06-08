@@ -3,6 +3,8 @@ package com.ebubekirgungor.shop.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,12 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ebubekirgungor.shop.repository.CategoryRepository;
 import com.ebubekirgungor.shop.repository.ProductRepository;
+import com.ebubekirgungor.shop.response.ProductResponse;
 import com.ebubekirgungor.shop.service.UploadService;
 import com.ebubekirgungor.shop.exception.ResourceNotFoundException;
 import com.ebubekirgungor.shop.model.Category;
 import com.ebubekirgungor.shop.model.Product;
 import com.ebubekirgungor.shop.model.Product.ProductDTO;
 import com.ebubekirgungor.shop.model.Product.ProductImage;
+import com.ebubekirgungor.shop.model.User;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -79,11 +83,23 @@ public class ProductController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+	public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
 		Product product = productRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Product not exist with id :" + id));
 
-		return ResponseEntity.ok(product);
+		boolean is_favorite = false;
+
+		for (Product item : productRepository.findProductsByUsersId(((User) authentication.getPrincipal()).getId())) {
+			if (item.getId() == id) {
+				is_favorite = true;
+			}
+		}
+
+		return ResponseEntity.ok(new ProductResponse(product.getId(), product.getTitle(), product.getUrl(),
+				product.getList_price(), product.getStock_quantity(), product.getImages(), product.getFilters(),
+				product.getCategoryTitle(), is_favorite));
 	}
 
 	@DeleteMapping("/{id}")
