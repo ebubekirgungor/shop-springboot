@@ -35,6 +35,13 @@ body {
   background-color: rgb(var(--background-color));
 }
 
+input {
+  font-family: inherit;
+  font-size: 14px;
+  padding-block: 2px;
+  padding-inline: 10px;
+}
+
 a {
   color: inherit;
   text-decoration: none;
