@@ -1,12 +1,15 @@
-import { FC } from "react";
+import { ChangeEvent, FC, InputHTMLAttributes } from "react";
 import styles from "./Input.module.css";
 
-interface Props {
+interface Props extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   type?: string;
+  name?: string;
+  value: string;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
-const Input: FC<Props> = ({ label, ...props }) => {
+const Input: FC<Props> = ({ label, name, value, onChange, ...rest }) => {
   return (
     <label>
       {label}
@@ -17,7 +20,10 @@ const Input: FC<Props> = ({ label, ...props }) => {
         autoCapitalize="off"
         spellCheck="false"
         type="text"
-        {...props}
+        name={name}
+        value={value}
+        onChange={onChange}
+        {...rest}
       />
     </label>
   );

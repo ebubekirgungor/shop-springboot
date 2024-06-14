@@ -1,5 +1,8 @@
 package com.ebubekirgungor.shop.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,7 +22,7 @@ import com.ebubekirgungor.shop.util.CookieUtils;
 
 import jakarta.servlet.http.HttpServletResponse;
 
-@CrossOrigin(origins = "${origin-url}")
+@CrossOrigin(origins = "${origin-url}", allowCredentials = "true")
 @RequestMapping("${api-base}/auth")
 @RestController
 public class AuthenticationController {
@@ -40,7 +43,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> authenticate(@RequestBody LoginUserDto loginUserDto,
+    public ResponseEntity<Map<String, String>> authenticate(@RequestBody LoginUserDto loginUserDto,
             HttpServletResponse response) {
         User authenticatedUser = authenticationService.authenticate(loginUserDto);
 
@@ -49,7 +52,9 @@ public class AuthenticationController {
         CookieUtils.addCookie(response, "jwt", jwtToken,
                 loginUserDto.getRemember_me() ? 30 * 24 * 60 * 60 : 60 * 60);
 
-        return ResponseEntity.ok("ok");
+        Map<String, String> loginResponse = new HashMap<>();
+        loginResponse.put("status", "ok");
+        return ResponseEntity.ok(loginResponse);
     }
 
     @PostMapping("/logout")
