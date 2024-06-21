@@ -12,3 +12,8 @@
 .button:hover {
   background-color: rgba(var(--foreground-color), 0.8);
 }
+
+.button:disabled {
+  pointer-events: none;
+  background-color: rgba(var(--foreground-color), 0.6);
+}

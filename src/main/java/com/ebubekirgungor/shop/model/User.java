@@ -68,7 +68,8 @@ public class User implements UserDetails {
     private String phone;
 
     @Column(name = "birth_date")
-    private String birth_date;
+    @Temporal(TemporalType.DATE)
+    private Date birth_date;
 
     @Column(name = "gender", nullable = false)
     private Boolean gender;
@@ -147,7 +148,7 @@ public class User implements UserDetails {
         private String first_name;
         private String last_name;
         private String phone;
-        private String birth_date;
+        private Date birth_date;
         private Boolean gender;
     }
 

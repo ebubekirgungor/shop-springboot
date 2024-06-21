@@ -1,15 +1,17 @@
 "use client";
 import { FormEvent, useState } from "react";
-import styles from "./page.module.css";
 import Box from "@/components/Box";
 import Input from "@/components/Input";
 import CheckBox from "@/components/CheckBox";
 import Button from "@/components/Button";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const router = useRouter();
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -27,12 +29,14 @@ export default function Login() {
       }),
     });
 
-    return Response.json({ response });
+    if (response.status == 200) {
+      router.push("/");
+    }
   }
 
   return (
     <Box width={"25rem"}>
-      <form className={styles.form} onSubmit={onSubmit}>
+      <form onSubmit={onSubmit}>
         <Input
           label="E-mail"
           type="text"
@@ -54,7 +58,13 @@ export default function Login() {
           checked={rememberMe}
           onChange={(e) => setRememberMe(e.target.checked)}
         />
-        <Button>Sign In</Button>
+        <Button disabled={!email || !password}>Sign In</Button>
+        <Link
+          href="/register"
+          style={{ textAlign: "center", fontSize: "14px" }}
+        >
+          Create Account
+        </Link>
       </form>
     </Box>
   );

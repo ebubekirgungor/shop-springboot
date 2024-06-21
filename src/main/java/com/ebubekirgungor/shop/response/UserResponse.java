@@ -1,5 +1,6 @@
 package com.ebubekirgungor.shop.response;
 
+import java.util.Date;
 import java.util.List;
 
 import com.ebubekirgungor.shop.model.User.Cart;
@@ -16,7 +17,7 @@ public class UserResponse {
     private String first_name;
     private String last_name;
     private String phone;
-    private String birth_date;
+    private Date birth_date;
     private Boolean gender;
     private List<Cart> cart;
 }
