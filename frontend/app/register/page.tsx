@@ -5,6 +5,7 @@ import Box from "@/components/Box";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
 import Radio from "@/components/Radio";
+import Icon from "@/components/Icon";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -22,8 +23,22 @@ export default function Login() {
   });
   const [gender, setGender] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordType, setPasswordType] = useState("password");
+  const [iconName, setIconName] = useState("eye_off");
 
   const [step, setStep] = useState(1);
+
+  function handlePhone(e: ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value
+      .replace(/\D/g, "")
+      .match(/(\d{0,3})(\d{0,3})(\d{0,4})/)!;
+
+    setPhone(
+      !value[2]
+        ? value[1]
+        : "(" + value[1] + ") " + value[2] + (value[3] ? "-" + value[3] : "")
+    );
+  }
 
   function handleBirthDateDay(e: ChangeEvent<HTMLInputElement>) {
     const value = e.target.value;
@@ -66,6 +81,16 @@ export default function Login() {
 
   function handleGender(e: ChangeEvent<HTMLInputElement>) {
     setGender(e.target.value);
+  }
+
+  function handlePasswordType() {
+    if (passwordType == "password") {
+      setPasswordType("text");
+      setIconName("eye");
+    } else {
+      setPasswordType("password");
+      setIconName("eye_off");
+    }
   }
 
   function next(event: FormEvent<HTMLFormElement>) {
@@ -137,7 +162,7 @@ export default function Login() {
             type="text"
             name="phone"
             value={phone}
-            onChange={(e) => setPhone(e.target.value)}
+            onChange={handlePhone}
           />
           <div className={styles.row}>
             <Input
@@ -168,24 +193,35 @@ export default function Login() {
               <Radio
                 label="Male"
                 name="gender"
-                value={true}
+                value={"true"}
                 onChange={handleGender}
               />
               <Radio
                 label="Female"
                 name="gender"
-                value={false}
+                value={"false"}
                 onChange={handleGender}
               />
             </div>
           </div>
-          <Input
-            label="Password"
-            type="password"
-            name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div>
+            <Input
+              label="Password"
+              type={passwordType}
+              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <span>
+              <button
+                type="button"
+                className={styles.eye}
+                onClick={handlePasswordType}
+              >
+                <Icon name={iconName} />
+              </button>
+            </span>
+          </div>
           <Button
             disabled={
               !phone ||

@@ -52,6 +52,13 @@ input {
 button {
   font-family: inherit;
   font-weight: 500;
+  border: none;
+  margin: 0;
+  padding: 0;
+  width: auto;
+  overflow: visible;
+  background: transparent;
+  color: inherit;
 }
 
 a {

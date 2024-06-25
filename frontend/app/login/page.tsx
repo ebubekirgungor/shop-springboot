@@ -1,17 +1,32 @@
 "use client";
 import { FormEvent, useState } from "react";
+import styles from "./page.module.css";
 import Box from "@/components/Box";
 import Input from "@/components/Input";
 import CheckBox from "@/components/CheckBox";
 import Button from "@/components/Button";
+import Icon from "@/components/Icon";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function Login() {
+  const router = useRouter();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  const router = useRouter();
+  const [passwordType, setPasswordType] = useState("password");
+  const [iconName, setIconName] = useState("eye_off");
+
+  function handlePasswordType() {
+    if (passwordType == "password") {
+      setPasswordType("text");
+      setIconName("eye");
+    } else {
+      setPasswordType("password");
+      setIconName("eye_off");
+    }
+  }
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -44,13 +59,24 @@ export default function Login() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <Input
-          label="Password"
-          type="password"
-          name="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <div>
+          <Input
+            label="Password"
+            type={passwordType}
+            name="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <span>
+            <button
+              type="button"
+              className={styles.eye}
+              onClick={handlePasswordType}
+            >
+              <Icon name={iconName} />
+            </button>
+          </span>
+        </div>
         <CheckBox
           label="Remember me"
           id="remember_me"
