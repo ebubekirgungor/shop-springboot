@@ -14,6 +14,10 @@ export default function AccountLayout({
           <Icon name="account"></Icon>
           Personal Details
         </Link>
+        <Link href="addresses">
+          <Icon name="address"></Icon>
+          Addresses
+        </Link>
       </nav>
       {children}
     </>

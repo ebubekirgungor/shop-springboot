@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "${origin-url}")
+@CrossOrigin(origins = "${origin-url}", allowCredentials = "true")
 @RestController
 @RequestMapping("${api-base}/addresses")
 public class AddressController {
