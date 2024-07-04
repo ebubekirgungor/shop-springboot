@@ -164,6 +164,17 @@ public class User implements UserDetails {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    public static class UpdateUserDto {
+        private String first_name;
+        private String last_name;
+        private String phone;
+        private Date birth_date;
+        private Boolean gender;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class UpdatePasswordDto {
         private String old_password;
         private String new_password;

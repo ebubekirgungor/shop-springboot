@@ -6,6 +6,7 @@
   padding-bottom: 8px;
   font-size: 14px;
   transition: transform 200ms ease-in-out;
+  will-change: transform;
 }
 
 .link:hover {

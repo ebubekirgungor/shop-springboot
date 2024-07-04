@@ -5,13 +5,13 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   type?: string;
   name?: string;
-  value: string;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  value?: string;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 const Input: FC<Props> = ({ label, name, value, onChange, ...rest }) => {
   return (
-    <label>
+    <label style={{ width: "100%" }}>
       {label}
       <input
         className={styles.input}

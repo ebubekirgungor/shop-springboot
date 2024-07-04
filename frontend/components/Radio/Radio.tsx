@@ -6,7 +6,7 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
   type?: string;
   name?: string;
   value: string;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 const Radio: FC<Props> = ({ label, name, value, onChange, ...rest }) => {

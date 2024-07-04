@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={poppins.className}>
-        <nav className={styles.nav}>
+        <header className={styles.nav}>
           <div className={styles.logo}>
             <Link href="/">
               <Image
@@ -45,7 +45,7 @@ export default function RootLayout({
               Cart
             </NavButton>
           </div>
-        </nav>
+        </header>
         <main className={styles.main}>{children}</main>
       </body>
     </html>
