@@ -50,6 +50,7 @@ input {
 }
 
 button {
+  cursor: pointer;
   font-family: inherit;
   font-weight: 500;
   border: none;

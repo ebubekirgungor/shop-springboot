@@ -74,7 +74,7 @@ export default function Login() {
     if (value === "" || (value.length <= 4 && value.match(/^\d{0,4}$/))) {
       setBirthDate((prevState) => ({
         ...prevState,
-        year: e.target.value,
+        year: value,
       }));
     }
   }
