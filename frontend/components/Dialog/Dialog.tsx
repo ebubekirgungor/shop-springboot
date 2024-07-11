@@ -17,7 +17,7 @@ const Dialog: FC<Props> = ({ title, close, status, children }) => {
         <div className={`${styles.dialog} ${!status && styles.close}`}>
           <div className={styles.title}>{title}</div>
           <button className={styles.closeButton} onClick={close}>
-            <Icon name="close"></Icon>
+            <Icon name="close" />
           </button>
           {children}
         </div>

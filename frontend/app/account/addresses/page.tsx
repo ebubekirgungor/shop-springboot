@@ -11,6 +11,7 @@ import Input from "@/components/Input";
 import Button from "@/components/Button";
 
 interface Address {
+  id: number | null;
   title: string;
   customer_name: string;
   address: string;
@@ -35,20 +36,26 @@ export default function Addresses() {
     getAllAddresses();
   }, []);
 
-  const [addAddressDialog, setAddAddressDialog] = useState(false);
-  const [addAddressDialogStatus, setAddAddressDialogStatus] = useState(false);
+  type DialogType = "POST" | "PUT" | "DELETE";
 
-  function openAddAddressDialog() {
-    setAddAddressDialogStatus(true);
-    setAddAddressDialog(true);
+  const [dialogType, setDialogType] = useState<DialogType>();
+  const [dialog, setDialog] = useState(false);
+  const [dialogStatus, setDialogStatus] = useState(false);
+
+  function openDialog(type: DialogType, address: Address) {
+    setDialogType(type);
+    setNewAddress(address);
+    setDialogStatus(true);
+    setDialog(true);
   }
 
-  function closeAddAddressDialog() {
-    setAddAddressDialogStatus(false);
-    setTimeout(() => setAddAddressDialog(false), 300);
+  function closeDialog() {
+    setDialogStatus(false);
+    setTimeout(() => setDialog(false), 300);
   }
 
   const [newAddress, setNewAddress] = useState<Address | any>({
+    id: null,
     title: "",
     customer_name: "",
     address: "",
@@ -60,11 +67,11 @@ export default function Addresses() {
     setNewAddress(copy);
   }
 
-  async function createNewAddress(event: FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const response = await fetch("addresses/create", {
-      method: "POST",
+    const response = await fetch("addresses/actions", {
+      method: dialogType,
       headers: {
         "Content-Type": "application/json",
       },
@@ -73,7 +80,7 @@ export default function Addresses() {
 
     if (response.status == 200) {
       await getAllAddresses();
-      closeAddAddressDialog();
+      closeDialog();
     }
   }
 
@@ -87,7 +94,14 @@ export default function Addresses() {
           <div className={styles.row}>
             <button
               className={styles.addAddressBox}
-              onClick={openAddAddressDialog}
+              onClick={() =>
+                openDialog("POST", {
+                  id: null,
+                  title: "",
+                  customer_name: "",
+                  address: "",
+                })
+              }
             ></button>
             {addresses &&
               addresses.map((address) => (
@@ -95,46 +109,63 @@ export default function Addresses() {
                   title={address.title}
                   customerName={address.customer_name}
                   address={address.address}
+                  editButton={() => openDialog("PUT", address)}
+                  deleteButton={() => openDialog("DELETE", address)}
                 ></Address>
               ))}
           </div>
         )}
-        {addAddressDialog && (
+        {dialog && (
           <Dialog
-            title="Add new address"
-            close={closeAddAddressDialog}
-            status={addAddressDialogStatus}
+            title={
+              {
+                POST: "Add new address",
+                PUT: "Edit address",
+                DELETE: "Delete address",
+              }[dialogType!]
+            }
+            close={closeDialog}
+            status={dialogStatus}
           >
-            <form onSubmit={createNewAddress}>
-              <Input
-                label="Title"
-                type="text"
-                name="title"
-                value={newAddress.title}
-                onChange={handleNewAddress}
-              />
-              <Input
-                label="Customer name"
-                type="text"
-                name="customer_name"
-                value={newAddress.customer_name}
-                onChange={handleNewAddress}
-              />
-              <Input
-                label="Address"
-                type="text"
-                name="address"
-                value={newAddress.address}
-                onChange={handleNewAddress}
-              />
-              <Button
-                disabled={
-                  !newAddress.title ||
-                  !newAddress.customer_name ||
-                  !newAddress.address
+            <form onSubmit={onSubmit}>
+              {dialogType != "DELETE" ? (
+                <>
+                  <Input
+                    label="Title"
+                    type="text"
+                    name="title"
+                    value={newAddress.title}
+                    required
+                    onChange={handleNewAddress}
+                  />
+                  <Input
+                    label="Customer name"
+                    type="text"
+                    name="customer_name"
+                    value={newAddress.customer_name}
+                    required
+                    onChange={handleNewAddress}
+                  />
+                  <Input
+                    label="Address"
+                    type="text"
+                    name="address"
+                    value={newAddress.address}
+                    required
+                    onChange={handleNewAddress}
+                  />
+                </>
+              ) : (
+                <div style={{ textAlign: "center" }}>Are you sure?</div>
+              )}
+              <Button>
+                {
+                  {
+                    POST: "Create",
+                    PUT: "Update",
+                    DELETE: "Delete",
+                  }[dialogType!]
                 }
-              >
-                Create
               </Button>
             </form>
           </Dialog>
