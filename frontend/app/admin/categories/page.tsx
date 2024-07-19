@@ -63,6 +63,21 @@ export default function Categories() {
     image: "",
   });
 
+  const [newFilter, setNewFilter] = useState("");
+
+  function handleNewFilter() {
+    const copy = { ...newCategory };
+    copy["filters"].push(newFilter);
+    setNewCategory(copy);
+    setNewFilter("");
+  }
+
+  function deleteFilter(index: number) {
+    const copy = { ...newCategory };
+    copy["filters"].splice(index, 1);
+    setNewCategory(copy);
+  }
+
   function handleNewCategory(e: ChangeEvent<HTMLInputElement>) {
     const copy = { ...newCategory } as any;
     copy[e.target.name] = e.target.value;
@@ -152,11 +167,42 @@ export default function Categories() {
                     required
                     onChange={handleNewCategory}
                   />
+                  <div className={styles.filtersContainer}>
+                    <Input
+                      label="Filters"
+                      type="text"
+                      name="newfilter"
+                      value={newFilter}
+                      onChange={(e) => setNewFilter(e.target.value)}
+                    />
+                    <button
+                      className={styles.addFilterButton}
+                      type="button"
+                      onClick={handleNewFilter}
+                      disabled={!newFilter}
+                    >
+                      Add
+                    </button>
+                  </div>
+                  <div className={styles.filtersRow}>
+                    {newCategory.filters &&
+                      newCategory.filters.map((filter, index) => (
+                        <div className={styles.filter}>
+                          {filter}
+                          <button
+                            onClick={() => deleteFilter(index)}
+                            type="button"
+                          >
+                            <Icon name="close" />
+                          </button>
+                        </div>
+                      ))}
+                  </div>
                 </>
               ) : (
                 <div style={{ textAlign: "center" }}>Are you sure?</div>
               )}
-              <Button>
+              <Button disabled={!newCategory.title}>
                 {
                   {
                     POST: "Create",
