@@ -1,0 +1,68 @@
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.addBox {
+  width: 14rem;
+  height: 18rem;
+  background-color: rgb(var(--nav-background-color));
+  border: 1px solid rgb(var(--border-color));
+  border-radius: 8px;
+  background-image: url("/icons/add.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 96px;
+  transition: background-size 200ms;
+  will-change: background-size;
+}
+
+.addBox:hover {
+  background-size: 144px;
+}
+
+.categoryBox {
+  display: flex;
+  flex-direction: column;
+  width: 14rem;
+  height: 18rem;
+  background-color: rgb(var(--nav-background-color));
+  border: 1px solid rgb(var(--border-color));
+  border-radius: 8px;
+}
+
+.categoryBox img {
+  width: calc(14rem - 2px);
+  height: 14rem;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.title {
+  padding: 1rem;
+  font-size: 16px;
+}
+
+.actions {
+  position: absolute;
+  margin: 1rem;
+  display: flex;
+  align-self: flex-end;
+  column-gap: 0.5rem;
+}
+
+.button {
+  width: 2.25rem;
+  height: 2.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100%;
+  background-color: rgba(var(--button-text-color), 0.5);
+  transition: background-color 200ms ease-in-out;
+}
+
+.button:hover {
+  background-color: rgba(var(--button-text-color), 0.8);
+}

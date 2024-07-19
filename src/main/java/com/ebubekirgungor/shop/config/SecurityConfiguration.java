@@ -38,6 +38,7 @@ public class SecurityConfiguration {
         http.csrf(csrf -> csrf
                 .disable())
                 .authorizeHttpRequests(requests -> requests
+                        .requestMatchers("/images/**").permitAll()
                         .requestMatchers(apiBase + "/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, apiBase + "/users").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.GET, apiBase + "/categories/**").permitAll()

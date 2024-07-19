@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,7 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "${origin-url}")
+@CrossOrigin(origins = "${origin-url}", allowCredentials = "true")
 @RestController
 @RequestMapping("${api-base}/categories")
 public class CategoryController {
@@ -108,6 +109,22 @@ public class CategoryController {
         return ResponseEntity.ok(categoryResponse);
     }
 
+    @CacheEvict(value = "categoriesCache", allEntries = true)
+    @PutMapping("/{id}")
+    public Category updateCategory(@RequestBody Category category, @PathVariable Long id) {
+
+        Category oldCategory = categoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not exist with id :" + id));
+
+        oldCategory.setTitle(category.getTitle());
+        oldCategory.setUrl(category.getUrl());
+        oldCategory.setImage(category.getImage());
+        oldCategory.setFilters(category.getFilters());
+
+        return categoryRepository.save(oldCategory);
+    }
+
+    @CacheEvict(value = "categoriesCache", allEntries = true)
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, Boolean>> deleteCategory(@PathVariable Long id) {
         Category category = categoryRepository.findById(id)

@@ -24,7 +24,7 @@ export default function PersonalDetails() {
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/v1/users/me", {
+    fetch("http://localhost/api/v1/users/me", {
       credentials: "include",
     })
       .then((response) => response.json())

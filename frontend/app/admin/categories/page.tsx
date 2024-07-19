@@ -5,35 +5,36 @@ import LayoutContainer from "@/components/LayoutContainer";
 import LayoutBox from "@/components/LayoutBox";
 import LayoutTitle from "@/components/LayoutTitle";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import Address from "@/components/Address";
 import Dialog from "@/components/Dialog";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
+import Icon from "@/components/Icon";
 
-interface Address {
+interface Category {
   id: number | null;
   title: string;
-  customer_name: string;
-  address: string;
+  url: string;
+  filters: string[];
+  image: string;
 }
 
-export default function Addresses() {
-  const [addresses, setAddresses] = useState<Address[]>([]);
+export default function Categories() {
+  const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setLoading] = useState(true);
 
-  async function getAllAddresses() {
-    await fetch("http://localhost/api/v1/addresses", {
+  async function getAllCategories() {
+    await fetch("http://localhost/api/v1/categories", {
       credentials: "include",
     })
       .then((response) => response.json())
       .then((data) => {
-        setAddresses(data);
+        setCategories(data);
         setLoading(false);
       });
   }
 
   useEffect(() => {
-    getAllAddresses();
+    getAllCategories();
   }, []);
 
   type DialogType = "POST" | "PUT" | "DELETE";
@@ -42,9 +43,9 @@ export default function Addresses() {
   const [dialog, setDialog] = useState(false);
   const [dialogStatus, setDialogStatus] = useState(false);
 
-  function openDialog(type: DialogType, address: Address) {
+  function openDialog(type: DialogType, category: Category) {
     setDialogType(type);
-    setNewAddress(address);
+    setNewCategory(category);
     setDialogStatus(true);
     setDialog(true);
   }
@@ -54,39 +55,40 @@ export default function Addresses() {
     setTimeout(() => setDialog(false), 300);
   }
 
-  const [newAddress, setNewAddress] = useState<Address | any>({
+  const [newCategory, setNewCategory] = useState<Category>({
     id: null,
     title: "",
-    customer_name: "",
-    address: "",
+    url: "",
+    filters: [],
+    image: "",
   });
 
-  function handleNewAddress(e: ChangeEvent<HTMLInputElement>) {
-    const copy = { ...newAddress };
+  function handleNewCategory(e: ChangeEvent<HTMLInputElement>) {
+    const copy = { ...newCategory } as any;
     copy[e.target.name] = e.target.value;
-    setNewAddress(copy);
+    setNewCategory(copy);
   }
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const response = await fetch("addresses/actions", {
+    const response = await fetch("categories/actions", {
       method: dialogType,
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(newAddress),
+      body: JSON.stringify(newCategory),
     });
 
     if (response.status == 200) {
-      await getAllAddresses();
+      await getAllCategories();
       closeDialog();
     }
   }
 
   return (
     <LayoutContainer>
-      <LayoutTitle>Addresses</LayoutTitle>
+      <LayoutTitle>Categories</LayoutTitle>
       <LayoutBox minHeight="274px">
         {isLoading ? (
           <LoadingSpinner />
@@ -98,20 +100,32 @@ export default function Addresses() {
                 openDialog("POST", {
                   id: null,
                   title: "",
-                  customer_name: "",
-                  address: "",
+                  url: "",
+                  filters: [],
+                  image: "",
                 })
               }
             ></button>
-            {addresses &&
-              addresses.map((address) => (
-                <Address
-                  title={address.title}
-                  customerName={address.customer_name}
-                  address={address.address}
-                  editButton={() => openDialog("PUT", address)}
-                  deleteButton={() => openDialog("DELETE", address)}
-                ></Address>
+            {categories &&
+              categories.map((category) => (
+                <div className={styles.categoryBox}>
+                  <div className={styles.actions}>
+                    <button
+                      className={styles.button}
+                      onClick={() => openDialog("PUT", category)}
+                    >
+                      <Icon name="edit" />
+                    </button>
+                    <button
+                      className={styles.button}
+                      onClick={() => openDialog("DELETE", category)}
+                    >
+                      <Icon name="delete" />
+                    </button>
+                  </div>
+                  <img src={"/images/categories/" + category.image} />
+                  <div className={styles.title}>{category.title}</div>
+                </div>
               ))}
           </div>
         )}
@@ -119,9 +133,9 @@ export default function Addresses() {
           <Dialog
             title={
               {
-                POST: "Add new address",
-                PUT: "Edit address",
-                DELETE: "Delete address",
+                POST: "Add new category",
+                PUT: "Edit category",
+                DELETE: "Delete category",
               }[dialogType!]
             }
             close={closeDialog}
@@ -134,25 +148,9 @@ export default function Addresses() {
                     label="Title"
                     type="text"
                     name="title"
-                    value={newAddress.title}
+                    value={newCategory.title}
                     required
-                    onChange={handleNewAddress}
-                  />
-                  <Input
-                    label="Customer name"
-                    type="text"
-                    name="customer_name"
-                    value={newAddress.customer_name}
-                    required
-                    onChange={handleNewAddress}
-                  />
-                  <Input
-                    label="Address"
-                    type="text"
-                    name="address"
-                    value={newAddress.address}
-                    required
-                    onChange={handleNewAddress}
+                    onChange={handleNewCategory}
                   />
                 </>
               ) : (

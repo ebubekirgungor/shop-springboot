@@ -3,9 +3,9 @@ export const fetchCache = "default-no-store";
 import { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
-  const { title, customer_name, address } = await req.json();
+  const { title, url, filters, image } = await req.json();
 
-  const res = await fetch("http://localhost/api/v1/addresses", {
+  const res = await fetch("http://localhost/api/v1/categories", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -13,8 +13,9 @@ export async function POST(req: NextRequest) {
     },
     body: JSON.stringify({
       title,
-      customer_name,
-      address,
+      url,
+      filters,
+      image,
     }),
   });
 
@@ -22,9 +23,9 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
-  const { id, title, customer_name, address } = await req.json();
+  const { id, title, url, filters, image } = await req.json();
 
-  const res = await fetch("http://localhost/api/v1/addresses/" + id, {
+  const res = await fetch("http://localhost/api/v1/categories/" + id, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -32,8 +33,9 @@ export async function PUT(req: NextRequest) {
     },
     body: JSON.stringify({
       title,
-      customer_name,
-      address,
+      url,
+      filters,
+      image,
     }),
   });
 
@@ -43,7 +45,7 @@ export async function PUT(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   const { id } = await req.json();
 
-  const res = await fetch("http://localhost/api/v1/addresses/" + id, {
+  const res = await fetch("http://localhost/api/v1/categories/" + id, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

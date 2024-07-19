@@ -102,7 +102,7 @@ export default function Login() {
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const response = await fetch("http://localhost:8080/api/v1/auth/signup", {
+    const response = await fetch("http://localhost/api/v1/auth/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
