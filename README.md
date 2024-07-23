@@ -1,3 +1,3 @@
 # shop-springboot
- E-commerce app written in Java and React (Next.js)\
+ E-commerce api written in Java\
  Spring Boot + PostgreSQL + Redis
