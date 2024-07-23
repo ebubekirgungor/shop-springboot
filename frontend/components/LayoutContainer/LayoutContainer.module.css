@@ -1,6 +1,0 @@
-.column {
-  display: flex;
-  flex-direction: column;
-  row-gap: 1rem;
-  width: clamp(30rem, 65rem, 65rem);
-}
