@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpServerErrorException;
 
 import com.ebubekirgungor.shop.repository.CategoryRepository;
 import com.ebubekirgungor.shop.request.CategoryRequest;
@@ -111,15 +112,21 @@ public class CategoryController {
 
     @CacheEvict(value = "categoriesCache", allEntries = true)
     @PutMapping("/{id}")
-    public Category updateCategory(@RequestBody Category category, @PathVariable Long id) {
+    public Category updateCategory(@ModelAttribute CategoryDTO categoryDTO, @PathVariable Long id) {
 
         Category oldCategory = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not exist with id :" + id));
 
-        oldCategory.setTitle(category.getTitle());
-        oldCategory.setUrl(category.getUrl());
-        oldCategory.setImage(category.getImage());
-        oldCategory.setFilters(category.getFilters());
+        try {
+            uploadService.upload(categoryDTO.getImage(), "images/categories");
+        } catch (Exception e) {
+            throw new HttpServerErrorException(HttpStatus.EXPECTATION_FAILED, "Could not upload the image");
+        }
+
+        oldCategory.setTitle(categoryDTO.getTitle());
+        oldCategory.setUrl(categoryDTO.getUrl());
+        oldCategory.setImage(categoryDTO.getImage().getOriginalFilename());
+        oldCategory.setFilters(categoryDTO.getFilters());
 
         return categoryRepository.save(oldCategory);
     }
